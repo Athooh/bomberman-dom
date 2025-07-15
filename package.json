@@ -1,0 +1,32 @@
+{
+    "name": "bomberman-dom-server",
+    "version": "2.0.0",
+    "description": "Enhanced multiplayer Bomberman server with modular architecture",
+    "main": "bomberman-server.js",
+    "type": "module",
+    "scripts": {
+        "start": "node bomberman-server.js",
+        "dev": "nodemon bomberman-server.js",
+        "client": "python3 -m http.server 8000",
+        "full": "node bomberman-server.js & python3 -m http.server 8000",
+        "test": "echo 'Testing server...' && node bomberman-server.js"
+    },
+    "keywords": [
+        "bomberman",
+        "multiplayer",
+        "websocket",
+        "game",
+        "modular"
+    ],
+    "author": "Enhanced Bomberman Team",
+    "license": "MIT",
+    "dependencies": {
+        "ws": "^8.15.1"
+    },
+    "devDependencies": {
+        "nodemon": "^3.1.10"
+    },
+    "engines": {
+        "node": ">=16.0.0"
+    }
+}
