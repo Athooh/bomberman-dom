@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>💣 Bomberman DOM - Enhanced Multiplayer Edition</title>
+
+    <!-- IMPORTANT: Load styles.css BEFORE any JavaScript -->
+    <link rel="stylesheet" href="static/styles.css">
+
+    <!-- Preload critical fonts for better performance -->
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;500;600;700&display=swap"
+        as="style">
+
+    <!-- Meta tags for better mobile experience -->
+    <meta name="description"
+        content="Enhanced Bomberman multiplayer game with real-time chat, power-ups, and 60fps performance">
+    <meta name="keywords" content="bomberman, multiplayer, game, realtime, websocket">
+    <meta name="author" content="Bomberman DOM Team">
+    <meta name="theme-color" content="#667eea">
+
+    <!-- Prevent zoom on mobile -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💣</text></svg>">
+</head>
+
+<body>
+    <!-- Loading screen while JavaScript loads -->
+    <div id="loading-fallback" style="
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: 'Segoe UI', sans-serif;
+        color: white;
+        z-index: 9999;
+    ">
+        <div style="text-align: center;">
+            <h1 style="font-size: 3em; margin-bottom: 20px;">💣 BOMBERMAN DOM</h1>
+            <div style="font-size: 1.5em; animation: spin 2s linear infinite;">⏳</div>
+            <p style="margin-top: 20px; opacity: 0.8;">Loading game assets...</p>
+        </div>
+    </div>
+
+    <!-- Main game container (will be replaced by UIManager) -->
+    <div id="app"></div>
+
+    <!-- Error fallback for JavaScript disabled -->
+    <noscript>
+        <div style="
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: linear-gradient(135deg, #d32f2f 0%, #b71c1c 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Segoe UI', sans-serif;
+            color: white;
+            text-align: center;
+            z-index: 10000;
+        ">
+            <div style="
+                background: rgba(0, 0, 0, 0.9);
+                padding: 40px;
+                border-radius: 20px;
+                max-width: 500px;
+                width: 90%;
+            ">
+                <h1 style="color: #ffcdd2; margin-bottom: 20px;">⚠️ JavaScript Required</h1>
+                <p style="margin-bottom: 15px;">
+                    Bomberman DOM requires JavaScript to run. Please enable JavaScript in your browser and refresh the
+                    page.
+                </p>
+                <button onclick="window.location.reload()" style="
+                    padding: 12px 24px;
+                    background: #f44336;
+                    color: white;
+                    border: none;
+                    border-radius: 6px;
+                    cursor: pointer;
+                    font-size: 1em;
+                    margin-top: 20px;
+                ">🔄 Refresh Page</button>
+            </div>
+        </div>
+    </noscript>
+
+    <!-- Game initialization script -->
+    <script type="module">
+        // Enhanced error handling for module loading
+        try {
+            // Import and initialize the game
+            import('./src/main.js')
+                .then(({ initializeEnhancedBomberman }) => {
+                    // Hide loading screen
+                    const loadingFallback = document.getElementById('loading-fallback');
+                    if (loadingFallback) {
+                        loadingFallback.style.display = 'none';
+                    }
+
+                    // Initialize the game
+                    const container = document.getElementById('app');
+                    return initializeEnhancedBomberman(container);
+                })
+                .then((gameInstance) => {
+                    console.log('🎮 Bomberman DOM initialized successfully!');
+                    console.log('Game instance:', gameInstance);
+
+                    // Add game instance to window for debugging
+                    window.bombermanGame = gameInstance;
+                })
+                .catch((error) => {
+                    console.error('❌ Failed to initialize Bomberman DOM:', error);
+                    showErrorScreen('Initialization Error', error.message);
+                });
+        } catch (error) {
+            console.error('❌ Module loading error:', error);
+            showErrorScreen('Loading Error', 'Failed to load game modules. Please check your browser compatibility.');
+        }
+
+        // Enhanced error screen function
+        function showErrorScreen(title, message) {
+            // Hide loading screen
+            const loadingFallback = document.getElementById('loading-fallback');
+            if (loadingFallback) {
+                loadingFallback.style.display = 'none';
+            }
+
+            // Show error screen
+            const errorScreen = document.createElement('div');
+            errorScreen.innerHTML = `
+                <div style="
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100vw;
+                    height: 100vh;
+                    background: linear-gradient(135deg, #d32f2f 0%, #b71c1c 100%);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    z-index: 10001;
+                    font-family: 'Segoe UI', sans-serif;
+                    color: white;
+                ">
+                    <div style="
+                        background: rgba(0, 0, 0, 0.9);
+                        padding: 40px;
+                        border-radius: 20px;
+                        text-align: center;
+                        max-width: 500px;
+                        width: 90%;
+                        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+                    ">
+                        <h1 style="
+                            font-size: 2em;
+                            margin-bottom: 20px;
+                            color: #ffcdd2;
+                        ">❌ ${title}</h1>
+                        <p style="
+                            font-size: 1.1em;
+                            margin-bottom: 15px;
+                            color: #ffebee;
+                            line-height: 1.5;
+                        ">${message}</p>
+                        <div style="
+                            font-size: 0.9em;
+                            margin-bottom: 30px;
+                            opacity: 0.8;
+                            font-family: monospace;
+                            background: rgba(255, 255, 255, 0.1);
+                            padding: 10px;
+                            border-radius: 5px;
+                            word-break: break-word;
+                        ">
+                            Please check the browser console for more details.
+                        </div>
+                        <button onclick="window.location.reload()" style="
+                            padding: 12px 24px;
+                            background: #f44336;
+                            color: white;
+                            border: none;
+                            border-radius: 6px;
+                            cursor: pointer;
+                            font-size: 1em;
+                            transition: background-color 0.3s ease;
+                        "
+                        onmouseover="this.style.backgroundColor='#d32f2f'"
+                        onmouseout="this.style.backgroundColor='#f44336'">
+                            🔄 Refresh Page
+                        </button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(errorScreen);
+        }
+
+        // Global error handlers
+        window.addEventListener('error', (event) => {
+            console.error('🚨 Global JavaScript Error:', event.error);
+            if (!window.bombermanGame) {
+                showErrorScreen('Runtime Error', event.error?.message || 'An unexpected error occurred');
+            }
+        });
+
+        window.addEventListener('unhandledrejection', (event) => {
+            console.error('🚨 Unhandled Promise Rejection:', event.reason);
+            if (!window.bombermanGame) {
+                showErrorScreen('Promise Rejection', event.reason?.message || 'An unexpected promise rejection occurred');
+            }
+        });
+
+        // Performance monitoring
+        if ('performance' in window) {
+            window.addEventListener('load', () => {
+                // Log performance metrics after page load
+                setTimeout(() => {
+                    const perfData = performance.getEntriesByType('navigation')[0];
+                    console.log('📊 Page Load Performance:', {
+                        domContentLoaded: Math.round(perfData.domContentLoadedEventEnd - perfData.domContentLoadedEventStart),
+                        loadComplete: Math.round(perfData.loadEventEnd - perfData.loadEventStart),
+                        totalTime: Math.round(perfData.loadEventEnd - perfData.fetchStart)
+                    });
+                }, 100);
+            });
+        }
+    </script>
+
+    <!-- Service Worker for offline support (optional) -->
+    <script>
+        // Register service worker for better caching (if available)
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                // Only register if sw.js exists (optional enhancement)
+                navigator.serviceWorker.register('/sw.js')
+                    .then(registration => {
+                        console.log('✅ SW registered:', registration);
+                    })
+                    .catch(registrationError => {
+                        // Silent fail - service worker is optional
+                        console.log('ℹ️ SW registration skipped:', registrationError.message);
+                    });
+            });
+        }
+    </script>
+
+    <!-- Basic loading animation styles -->
+    <style>
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Hide scrollbars while preserving functionality */
+        body {
+            overflow: hidden;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Ensure crisp pixel rendering for game graphics */
+        * {
+            image-rendering: -moz-crisp-edges;
+            image-rendering: -webkit-crisp-edges;
+            image-rendering: pixelated;
+            image-rendering: crisp-edges;
+        }
+    </style>
+</body>
+
+</html>
