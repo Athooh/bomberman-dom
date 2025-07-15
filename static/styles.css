@@ -1,0 +1,1058 @@
+/* Dark Theme Color Variables */
+:root {
+    /* Background & Structure */
+    --bg-primary: #0a0e0a;
+    --bg-secondary: #1a251a;
+    --surface: #2d4a2d;
+    --surface-overlay: rgba(45, 74, 45, 0.95);
+    /* Solid color instead of transparency */
+    --border: #4ade80;
+    --border-light: rgba(74, 222, 128, 0.3);
+    --border-dark: #1f2937;
+
+    /* Game Elements */
+    --wall: #1f2937;
+    --wall-secondary: #111827;
+    --block: #374151;
+    --block-secondary: #1f2937;
+    --player-1: #22d3ee;
+    --player-2: #fb7185;
+    --player-3: #a78bfa;
+    --player-4: #4ade80;
+
+    /* Action Colors */
+    --bomb: #ef4444;
+    --explosion: #fbbf24;
+    --powerup: #22d3ee;
+
+    /* UI Accents */
+    --accent: #059669;
+    --accent-2: #10b981;
+    --accent-hover: #16a34a;
+    --text: #ecfdf5;
+    --text-dim: #86efac;
+    --text-disabled: rgba(134, 239, 172, 0.3);
+    --text-dark: #064e3b;
+
+    /* Status Colors */
+    --success: #4ade80;
+    --warning: #fbbf24;
+    --error: #ef4444;
+    --info: #22d3ee;
+}
+
+/* Reset and base styles */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: var(--bg-primary);
+    color: var(--text);
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+
+/* Main game container */
+.bomberman-game-container {
+    width: 100vw !important;
+    height: 100vh !important;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    z-index: 1000 !important;
+    background: var(--bg-primary) !important;
+    /* Solid color instead of gradient */
+}
+
+/* Screen layouts */
+.screen {
+    width: 100vw !important;
+    height: 100vh !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    background: var(--bg-primary) !important;
+    /* Solid color */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
+    color: var(--text) !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    z-index: 1001 !important;
+}
+
+.screen-content {
+    background: var(--surface) !important;
+    /* Solid color instead of overlay + blur */
+    padding: 40px !important;
+    border-radius: 20px !important;
+    text-align: center !important;
+    max-width: 600px !important;
+    width: 90% !important;
+    border: 1px solid var(--border) !important;
+    /* Removed box-shadow and backdrop-filter */
+}
+
+/* Playing screen */
+.playing-screen {
+    width: 100vw !important;
+    height: 100vh !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    background: var(--bg-primary) !important;
+    /* Solid color */
+    z-index: 1001 !important;
+}
+
+/* Game area styles */
+#game-area {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 480px;
+    height: 416px;
+    background: var(--bg-primary) !important;
+    border: 3px solid var(--border) !important;
+    border-radius: 8px !important;
+    overflow: hidden !important;
+    z-index: 100;
+    /* Removed box-shadow */
+}
+
+/* Game rendering containers */
+.static-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+.dynamic-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 10;
+}
+
+/* OPTIMIZED Game entities - Removed gradients and complex effects */
+.wall {
+    position: absolute;
+    width: 32px;
+    height: 32px;
+    background: var(--wall);
+    /* Solid color instead of gradient */
+    border: 1px solid var(--wall-secondary);
+    z-index: 5;
+}
+
+.block {
+    position: absolute;
+    width: 32px;
+    height: 32px;
+    background: var(--block);
+    /* Solid color instead of gradient */
+    border: 1px solid var(--block-secondary);
+    z-index: 3;
+}
+
+.player {
+    position: absolute;
+    width: 32px;
+    height: 32px;
+    background: var(--player-1);
+    border-radius: 50%;
+    border: 2px solid var(--text);
+    will-change: transform;
+    /* Only transform, removed transition */
+    z-index: 20;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: bold;
+    color: var(--bg-primary);
+    /* Removed text-shadow */
+}
+
+/* SIMPLIFIED invulnerability effect - lighter animation */
+.player.invulnerable {
+    animation: invulnerable-flash 0.5s infinite alternate;
+}
+
+@keyframes invulnerable-flash {
+    0% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0.5;
+    }
+}
+
+/* OPTIMIZED explosion - solid color, simpler animation */
+.explosion {
+    position: absolute;
+    width: 32px;
+    height: 32px;
+    background: var(--explosion);
+    /* Solid color instead of gradient */
+    border-radius: 50%;
+    will-change: transform;
+    z-index: 25;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    animation: explosion-scale 0.3s ease-out;
+    /* Shorter, simpler animation */
+}
+
+@keyframes explosion-scale {
+    0% {
+        transform: scale(0.8);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* SIMPLIFIED power-up - removed floating animation */
+.power-up {
+    position: absolute;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    border: 2px solid var(--text);
+    background: var(--powerup);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    will-change: transform;
+    z-index: 10;
+    /* Removed animation for performance */
+}
+
+/* Typography - Simplified */
+.game-title {
+    font-size: 3em !important;
+    margin-bottom: 20px !important;
+    color: var(--accent) !important;
+    /* Solid color instead of gradient text */
+    font-weight: bold !important;
+    /* Removed text-shadow and gradient effects */
+}
+
+.subtitle {
+    font-size: 1.2em !important;
+    opacity: 0.9 !important;
+    margin-bottom: 30px !important;
+    color: var(--text-dim) !important;
+}
+
+/* Form elements - Simplified */
+.nickname-form {
+    margin: 30px 0 !important;
+}
+
+.nickname-form h2 {
+    color: var(--text) !important;
+    margin-bottom: 20px !important;
+    font-size: 1.5em !important;
+}
+
+.nickname-input {
+    width: 100% !important;
+    padding: 15px !important;
+    font-size: 1.1em !important;
+    border: 1px solid var(--border) !important;
+    border-radius: 10px !important;
+    margin-bottom: 20px !important;
+    background: var(--surface) !important;
+    color: var(--text) !important;
+    outline: none !important;
+    /* Removed box-shadow and transitions for performance */
+}
+
+.nickname-input:focus {
+    background: var(--bg-secondary) !important;
+    border-color: var(--accent) !important;
+    /* Removed box-shadow and transform */
+}
+
+.nickname-input::placeholder {
+    color: var(--text-dim) !important;
+    opacity: 0.8 !important;
+}
+
+/* Buttons - Solid colors, minimal effects */
+.primary-button,
+.menu-button {
+    padding: 15px 30px !important;
+    font-size: 1.1em !important;
+    border: none !important;
+    border-radius: 10px !important;
+    cursor: pointer !important;
+    margin: 10px !important;
+    background: var(--accent) !important;
+    /* Solid color instead of gradient */
+    color: var(--text) !important;
+    font-weight: bold !important;
+    text-transform: uppercase !important;
+    letter-spacing: 1px !important;
+    position: relative !important;
+    /* Removed transitions, box-shadow, and overflow */
+}
+
+.primary-button:hover:not(:disabled),
+.menu-button:hover {
+    background: var(--accent-hover) !important;
+    /* Simple color change */
+    /* Removed transform and box-shadow */
+}
+
+.primary-button:active:not(:disabled),
+.menu-button:active {
+    background: var(--accent-2) !important;
+    /* Removed transform and box-shadow */
+}
+
+.primary-button:disabled {
+    background: var(--surface) !important;
+    cursor: not-allowed !important;
+    opacity: 0.6 !important;
+}
+
+.secondary-button {
+    padding: 12px 24px !important;
+    background: var(--surface) !important;
+    color: var(--text) !important;
+    border: 2px solid var(--border) !important;
+    border-radius: 8px !important;
+    cursor: pointer !important;
+}
+
+.secondary-button:hover {
+    background: var(--bg-secondary) !important;
+    border-color: var(--accent) !important;
+}
+
+.connection-status {
+    margin-top: 20px !important;
+    padding: 15px !important;
+    border-radius: 8px !important;
+    font-size: 0.9em !important;
+    font-weight: 500 !important;
+}
+
+.connection-status.connected {
+    background: var(--bg-secondary) !important;
+    color: var(--success) !important;
+    border: 1px solid var(--success) !important;
+}
+
+.connection-status.connecting {
+    background: var(--bg-secondary) !important;
+    color: var(--warning) !important;
+    border: 1px solid var(--warning) !important;
+}
+
+.connection-status.disconnected {
+    background: var(--bg-secondary) !important;
+    color: var(--error) !important;
+    border: 1px solid var(--error) !important;
+}
+
+.performance-info {
+    background: var(--surface) !important;
+    padding: 8px 12px !important;
+    border-radius: 6px !important;
+    font-size: 0.9em !important;
+    border: 1px solid var(--border) !important;
+}
+
+.fps-counter.fps-good {
+    color: var(--success) !important;
+}
+
+.fps-counter.fps-medium {
+    color: var(--warning) !important;
+}
+
+.fps-counter.fps-poor {
+    color: var(--error) !important;
+}
+
+.player-stats {
+    background: var(--surface) !important;
+    padding: 10px !important;
+    border-radius: 8px !important;
+    max-width: 200px !important;
+    border: 1px solid var(--border) !important;
+}
+
+.player-stat {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    margin-bottom: 8px !important;
+    padding: 4px 8px !important;
+    border-radius: 4px !important;
+    background: var(--bg-secondary) !important;
+}
+
+.player-stat.local-player {
+    background: var(--surface) !important;
+    border: 1px solid var(--accent) !important;
+}
+
+.controls-info {
+    background: var(--surface) !important;
+    padding: 8px 12px !important;
+    border-radius: 6px !important;
+    font-size: 0.8em !important;
+    color: var(--text-dim) !important;
+    border: 1px solid var(--border) !important;
+}
+
+.notifications {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 10px !important;
+}
+
+.notification {
+    padding: 12px 20px !important;
+    border-radius: 8px !important;
+    cursor: pointer !important;
+    font-weight: 500 !important;
+}
+
+.notification.info {
+    background: var(--bg-secondary) !important;
+    color: var(--info) !important;
+    border: 1px solid var(--info) !important;
+}
+
+.notification.success {
+    background: var(--bg-secondary) !important;
+    color: var(--success) !important;
+    border: 1px solid var(--success) !important;
+}
+
+.notification.warning {
+    background: var(--bg-secondary) !important;
+    color: var(--warning) !important;
+    border: 1px solid var(--warning) !important;
+}
+
+.notification.error {
+    background: var(--bg-secondary) !important;
+    color: var(--error) !important;
+    border: 1px solid var(--error) !important;
+}
+
+.loading-spinner {
+    display: inline-block !important;
+    animation: spin 1s linear infinite !important;
+    font-size: 1.2em !important;
+    margin-right: 10px !important;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* Error screens */
+.error-screen {
+    background: var(--bg-primary) !important;
+    /* Solid color */
+}
+
+.error-content {
+    background: var(--surface) !important;
+    /* Solid color */
+    padding: 40px !important;
+    border-radius: 20px !important;
+    text-align: center !important;
+    color: var(--text) !important;
+    max-width: 500px !important;
+    width: 90% !important;
+}
+
+.error-title {
+    font-size: 2em !important;
+    margin-bottom: 20px !important;
+    color: var(--error) !important;
+}
+
+.error-message {
+    font-size: 1.1em !important;
+    margin-bottom: 15px !important;
+    color: var(--text-dim) !important;
+}
+
+.queue-status {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.queue-counter {
+    font-size: 2em;
+    margin-bottom: 20px;
+}
+
+.current-count {
+    color: var(--success);
+    font-weight: bold;
+}
+
+.separator {
+    color: var(--text-dim);
+    margin: 0 5px;
+}
+
+.max-count {
+    color: var(--warning);
+    font-weight: bold;
+}
+
+.label {
+    color: var(--text-dim);
+    font-size: 0.8em;
+}
+
+.waiting-players {
+    margin: 20px 0;
+}
+
+.player-list {
+    list-style: none;
+    padding: 0;
+}
+
+.player-list li {
+    padding: 8px 16px;
+    margin: 5px 0;
+    background: var(--surface);
+    border-radius: 4px;
+}
+
+.you-label {
+    color: var(--success);
+    font-weight: bold;
+}
+
+.countdown-display {
+    text-align: center;
+    margin: 40px 0;
+}
+
+.countdown-number {
+    font-size: 4em;
+    font-weight: bold;
+    color: var(--warning);
+}
+
+.countdown-label {
+    font-size: 1.2em;
+    color: var(--text-dim);
+    margin-top: 10px;
+}
+
+.game-players {
+    margin: 30px 0;
+}
+
+.player-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.player-card {
+    background: var(--surface);
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+    border: 2px solid transparent;
+}
+
+.player-card.player-0 {
+    border-color: var(--player-1);
+}
+
+.player-card.player-1 {
+    border-color: var(--player-2);
+}
+
+.player-card.player-2 {
+    border-color: var(--player-3);
+}
+
+.player-card.player-3 {
+    border-color: var(--player-4);
+}
+
+.player-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin: 0 auto 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1.2em;
+}
+
+.player-card.player-0 .player-avatar {
+    background: var(--player-1);
+}
+
+.player-card.player-1 .player-avatar {
+    background: var(--player-2);
+}
+
+.player-card.player-2 .player-avatar {
+    background: var(--player-3);
+}
+
+.player-card.player-3 .player-avatar {
+    background: var(--player-4);
+}
+
+.player-name {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.you-badge {
+    background: var(--success);
+    color: var(--text-dark);
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.8em;
+    font-weight: bold;
+}
+
+.winner-title {
+    color: var(--warning) !important;
+}
+
+.game-over-title {
+    color: var(--error) !important;
+}
+
+.game-results {
+    margin: 30px 0;
+}
+
+.winner-info,
+.draw-info {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.winner-stats {
+    color: var(--text-dim);
+    font-size: 0.9em;
+    margin-top: 10px;
+}
+
+.final-standings {
+    margin-top: 30px;
+}
+
+.standings-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+.standings-table th,
+.standings-table td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid var(--border-light);
+}
+
+.standings-table th {
+    background: var(--bg-secondary);
+    font-weight: bold;
+}
+
+.winner-row {
+    background: var(--bg-secondary) !important;
+    color: var(--warning) !important;
+    font-weight: bold;
+}
+
+.game-over-actions {
+    margin-top: 30px;
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+}
+
+/* Game info */
+.game-info {
+    margin: 30px 0;
+    text-align: left;
+}
+
+.game-info h3 {
+    color: var(--success);
+    margin-bottom: 15px;
+}
+
+.game-info ul {
+    list-style: none;
+    padding: 0;
+}
+
+.game-info li {
+    padding: 5px 0;
+    color: var(--text-dim);
+}
+
+.menu-options {
+    margin: 30px 0;
+}
+.chat-panel {
+    background: var(--surface);
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.chat-panel.queue-context {
+    border-color: var(--warning);
+    max-height: 320px;
+}
+
+.chat-panel.game-context {
+    border-color: var(--success);
+    max-height: 280px;
+}
+
+.chat-header {
+    background: var(--accent);
+    color: var(--text);
+    padding: 8px 12px;
+    font-weight: bold;
+    font-size: 14px;
+    text-align: center;
+    border-bottom: 1px solid var(--border);
+}
+
+.queue-context .chat-header {
+    background: var(--warning);
+    /* Solid color */
+}
+
+.chat-messages {
+    padding: 8px;
+    max-height: 150px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+}
+
+/* Simplified scrollbar styling */
+.chat-messages::-webkit-scrollbar {
+    width: 6px;
+}
+
+.chat-messages::-webkit-scrollbar-track {
+    background: var(--bg-secondary);
+}
+
+.chat-messages::-webkit-scrollbar-thumb {
+    background: var(--border);
+}
+
+.chat-message {
+    margin-bottom: 6px;
+    padding: 4px 6px;
+    border-radius: 6px;
+    font-size: 13px;
+    line-height: 1.3;
+    word-wrap: break-word;
+    max-width: 100%;
+}
+
+.chat-message:not(.own-message) {
+    background: var(--bg-secondary);
+    border-left: 3px solid var(--accent);
+}
+
+.chat-message.own-message {
+    background: var(--surface);
+    border-left: 3px solid var(--success);
+    margin-left: 10px;
+}
+
+.chat-nickname {
+    color: var(--success);
+    font-weight: bold;
+    margin-right: 6px;
+}
+
+.own-message .chat-nickname {
+    color: var(--info);
+}
+
+.chat-text {
+    color: var(--text-dim);
+}
+
+.own-message .chat-text {
+    color: var(--text);
+}
+
+.chat-input-container {
+    display: flex;
+    padding: 8px;
+    background: var(--bg-secondary);
+    border-top: 1px solid var(--border);
+    gap: 6px;
+}
+
+.chat-input {
+    flex: 1;
+    background: var(--bg-primary);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 6px 8px;
+    color: var(--text);
+    font-size: 13px;
+    outline: none;
+}
+
+.chat-input:focus {
+    background: var(--surface);
+    border-color: var(--accent);
+}
+
+.chat-input::placeholder {
+    color: var(--text-dim);
+}
+
+.chat-send-button {
+    background: var(--success);
+    color: var(--text-dark);
+    border: none;
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-size: 12px;
+    font-weight: bold;
+    cursor: pointer;
+    min-width: 50px;
+}
+
+.chat-send-button:hover:not(:disabled) {
+    background: var(--accent-2);
+}
+
+.chat-send-button:disabled {
+    background: var(--surface);
+    color: var(--text-dim);
+    cursor: not-allowed;
+}
+
+.chat-feedback {
+    pointer-events: none;
+    font-size: 11px;
+    font-weight: 500;
+    border-radius: 4px;
+    z-index: 1000;
+}
+
+.chat-feedback.info {
+    background: var(--bg-secondary);
+    color: var(--info);
+}
+
+.chat-feedback.success {
+    background: var(--bg-secondary);
+    color: var(--success);
+}
+
+.chat-feedback.warning {
+    background: var(--bg-secondary);
+    color: var(--warning);
+}
+
+.chat-feedback.error {
+    background: var(--bg-secondary);
+    color: var(--error);
+}
+
+@media (max-width: 768px) {
+    .screen-content {
+        padding: 20px !important;
+        width: 95% !important;
+    }
+
+    .game-title {
+        font-size: 2.5em !important;
+    }
+
+    .subtitle {
+        font-size: 1em !important;
+    }
+
+    .nickname-input {
+        padding: 12px !important;
+    }
+
+    .primary-button,
+    .menu-button {
+        padding: 12px 24px !important;
+        font-size: 1em !important;
+    }
+
+    #game-area {
+        width: 90vw !important;
+        height: 70vh !important;
+        max-width: 480px !important;
+        max-height: 416px !important;
+    }
+
+    .player-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .countdown-number {
+        font-size: 3em;
+    }
+
+    .game-over-actions {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .chat-panel {
+        position: fixed !important;
+        bottom: 10px !important;
+        left: 10px !important;
+        right: 10px !important;
+        width: auto !important;
+        max-width: none !important;
+    }
+
+    .chat-messages {
+        max-height: 120px;
+    }
+
+    .chat-input-container {
+        padding: 6px;
+    }
+
+    .chat-input {
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 480px) {
+
+    .performance-info,
+    .player-stats,
+    .controls-info {
+        font-size: 0.8em;
+        padding: 6px 8px;
+    }
+
+    #game-area {
+        width: 95vw !important;
+        height: 60vh !important;
+    }
+}
+
+/* Focus management - Simplified */
+*:focus {
+    outline: 2px solid var(--accent) !important;
+    outline-offset: 2px !important;
+}
+
+button:focus,
+input:focus {
+    outline: 2px solid var(--border) !important;
+    outline-offset: 2px !important;
+}
+
+/* Debug info */
+.debug-info {
+    background: var(--surface);
+    border: 1px solid var(--border-dark);
+    border-radius: 5px;
+    padding: 10px;
+    font-family: monospace;
+    font-size: 0.8em;
+    color: var(--text-dim);
+    max-width: 300px;
+}
+
+.debug-info h3 {
+    color: var(--success);
+    margin-bottom: 10px;
+    font-size: 1em;
+}
+
+.debug-info div {
+    margin: 3px 0;
+}
+
+/* Accessibility - Disable animations for users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+    }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .screen {
+        background: var(--bg-primary) !important;
+    }
+
+    .screen-content {
+        background: var(--text) !important;
+        color: var(--bg-primary) !important;
+        border: 2px solid var(--bg-primary) !important;
+    }
+
+    .primary-button,
+    .menu-button {
+        background: var(--bg-primary) !important;
+        color: var(--text) !important;
+        border: 2px solid var(--text) !important;
+    }
+}
